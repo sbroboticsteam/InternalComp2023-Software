@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Hangman Game</h1>
+    <p>Word: <span id="wordDisplay">{{ word_display }}</span></p>
+    <p>Attempts left: <span id="attemptsLeft">{{ attempts_left }}</span></p>
+    <p>Guessed letters: <span id="guessedLetters">{{ guessed_letters|join(', ') }}</span></p>
+    <p id="gameMessage">{{ message }}</p>
+
+    <script>
+        // Function to poll the server for game status
+        function updateGameStatus() {
+            $.ajax({
+                type: "GET",
+                url: "/game_status",
+                dataType: "json",
+                success: function(data) {
+                    // Update the DOM with the new data
+                    $("#wordDisplay").text(data.word_display);
+                    $("#attemptsLeft").text(data.attempts_left);
+                    $("#guessedLetters").text(data.guessed_letters.join(", "));
+                    if(data.message) {
+                        $("#gameMessage").text(data.message);
+                    }
+                }
+            });
+        }
+
+        // Poll the server every 5 seconds
+        setInterval(updateGameStatus, 50);
+    </script>
+
+</body>
+</html>
