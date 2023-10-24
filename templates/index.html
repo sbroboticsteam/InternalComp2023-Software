@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hangman Game</title>
-    <!-- Include jQuery library -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Hangman Game</h1>
@@ -15,26 +13,28 @@
     <p id="gameMessage">{{ message }}</p>
 
     <script>
-        // Function to poll the server for game status
+        ff = true
         function updateGameStatus() {
-            $.ajax({
-                type: "GET",
-                url: "/game_status",
-                dataType: "json",
-                success: function(data) {
-                    // Update the DOM with the new data
-                    $("#wordDisplay").text(data.word_display);
-                    $("#attemptsLeft").text(data.attempts_left);
-                    $("#guessedLetters").text(data.guessed_letters.join(", "));
+            fetch("/game_status")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("wordDisplay").textContent = data.word_display;
+                    document.getElementById("attemptsLeft").textContent = data.attempts_left;
+                    document.getElementById("guessedLetters").textContent = data.guessed_letters.join(", ");
                     if(data.message) {
-                        $("#gameMessage").text(data.message);
+                        document.getElementById("gameMessage").textContent = data.message;
                     }
-                }
-            });
-        }
-
-        // Poll the server every 5 seconds
-        setInterval(updateGameStatus, 50);
+                    if(data.is_game_over) {
+                        ff = false
+                        window.location.href = "/end_game";  // Redirect to the end game page
+                    }
+                })
+                .catch(error => console.error("There was an error fetching the game status:", error));
+            }
+        
+        setInterval(updateGameStatus, 300);
+        
+        
     </script>
 
 </body>

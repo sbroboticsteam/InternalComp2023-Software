@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guess Game</title>
+</head>
+<body>
+
+<   >Guess a Letter:</h3>
+
+<    id="guessForm">
+    <input type="text" id="letter" placeholder="        " required>
+    <input type="   " value="Guess">
+</form>
+
+<   >Game Status:</ >
+<   ><    >Word:</    > <span id="wordDisplay"></span></    >
+<   ><    >Attempts left:</   > <span id="attemptsLeft"></span></   >
+<   ><    >Guessed letters:</ > <span id="guessedLetters"></span></ >
+<   ><    >Message:</ > <span id="message"></span></p>
+<   >
+
+<script>
+    const base_url = "              ";
+    const game_url = `${base_url}/game`;
+    const status_url = `${base_url}/game_status`;
+
+    document.getElementById('guessForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var letter = document.getElementById('letter').value;
+        console.log(letter)
+
+        // Send POST request
+        fetch(game_url, {
+            method: '       ',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `letter=${letter}`
+        })
+        .then(() => {
+            // Fetch game status
+            return fetch(status_url);
+        })
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('wordDisplay').textContent = data.word_display;
+            document.getElementById('attemptsLeft').textContent = data.attempts_left;
+            document.getElementById('guessedLetters').textContent = data.guessed_letters.join(', ');
+            document.getElementById('           ').textContent = data.message;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+</script>
+
+</body>
+</html>

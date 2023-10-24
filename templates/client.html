@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Guess Game</title>
+</head>
+<body>
+
+<h3>Guess a Letter:</h3>
+
+<form id="guessForm">
+    <input type="text" id="letter" maxlength="1" placeholder="Enter a single letter" required>
+    <input type="submit" value="Guess">
+</form>
+
+<h3>Game Status:</h3>
+<p><strong>Word:</strong> <span id="wordDisplay"></span></p>
+<p><strong>Attempts left:</strong> <span id="attemptsLeft"></span></p>
+<p><strong>Guessed letters:</strong> <span id="guessedLetters"></span></p>
+<p><strong>Message:</strong> <span id="message"></span></p>
+<hr>
+
+<script>
+    const base_url = "http://127.0.0.1:5000";
+    const game_url = `${base_url}/game`;
+    const status_url = `${base_url}/game_status`;
+
+    document.getElementById('guessForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        var letter = document.getElementById('letter').value;
+        console.log(letter)
+
+        // Send POST request
+        fetch(game_url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: `letter=${letter}`
+        })
+        .then(() => {
+            // Fetch game status
+            return fetch(status_url);
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Display game status
+            document.getElementById('wordDisplay').textContent = data.word_display;
+            document.getElementById('attemptsLeft').textContent = data.attempts_left;
+            document.getElementById('guessedLetters').textContent = data.guessed_letters.join(', ');
+            document.getElementById('message').textContent = data.message;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    });
+</script>
+
+</body>
+</html>
