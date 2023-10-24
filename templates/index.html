@@ -13,7 +13,6 @@
     <p id="gameMessage">{{ message }}</p>
 
     <script>
-        ff = true
         function updateGameStatus() {
             fetch("/game_status")
                 .then(response => response.json())
@@ -25,8 +24,16 @@
                         document.getElementById("gameMessage").textContent = data.message;
                     }
                     if(data.is_game_over) {
-                        ff = false
-                        window.location.href = "/end_game";  // Redirect to the end game page
+
+                        if(data.is_winner){
+                            window.location.href = "/winner";
+
+                        }
+                        else{
+                            window.location.href = "/looser";
+                        }
+                        
+                          
                     }
                 })
                 .catch(error => console.error("There was an error fetching the game status:", error));
