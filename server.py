@@ -69,6 +69,10 @@ def game_status():
             'is_winner': is_winner
         })
 
+@app.route('/status',methods=['GET'])
+def status():
+    return jsonify({'connection':'Connected'})
+
 if __name__ == '__main__':
     
     app.run(debug=True,host="0.0.0.0")

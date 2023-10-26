@@ -15,3 +15,9 @@ while True:
     print("Guessed letters:", ', '.join(data["guessed_letters"]))
     print(data["message"])
     print("-" * 50)
+
+
+# response = requests.get(f"{base_url}/status")
+# print(response.status_code)
+# data = response.json()
+# print(data['connection'])
