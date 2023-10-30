@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hangman Game</title>
+</head>
+<body>
+    <h1>Hangman Game</h1>
+    <p>Word: <span id="wordDisplay">{{ word_display }}</span></p>
+    <p>Attempts left: <span id="attemptsLeft">{{ attempts_left }}</span></p>
+    <p>Guessed letters: <span id="guessedLetters">{{ guessed_letters|join(', ') }}</span></p>
+    <p id="gameMessage">{{ message }}</p>
+
+    <script>
+        function updateGameStatus() {
+            fetch("/game_status")
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("wordDisplay").textContent = data.word_display;
+                    document.getElementById("attemptsLeft").textContent = data.attempts_left;
+                    document.getElementById("guessedLetters").textContent = data.guessed_letters.join(", ");
+                    if(data.message) {
+                        document.getElementById("gameMessage").textContent = data.message;
+                    }
+                    if(data.is_game_over) {
+
+                        if(data.is_winner){
+                            window.location.href = "/winner";
+
+                        }
+                        else{
+                            window.location.href = "/looser";
+                        }
+                        
+                          
+                    }
+                })
+                .catch(error => console.error("There was an error fetching the game status:", error));
+            }
+        
+        setInterval(updateGameStatus, 300);
+        
+        
+    </script>
+
+</body>
+</html>
