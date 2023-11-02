@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ESP32 Joystick Controller</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nipplejs/0.10.1/nipplejs.js"></script>
+    <style>
+                #joystick {
+
+            position: center;
+            margin: 50px auto; 
+            border-radius: 100px; 
+        }
+    </style>
+</head>
+
+<body>
+   
+    <div id="joystick"></div>
+    
+
+    <script>
+        // Create a new joystick in the 'joystick' div
+        var joystick = nipplejs.create({
+            zone: document.getElementById('joystick'),
+            mode: 'static',
+            position: { left: '50%', top: '50%' },
+            color: 'blue',
+            size: 500
+        });
+
+        // Function to send the request to the ESP32
+        function sendDirection(direction) {
+            // The IP address and endpoint for the ESP32 server
+            var espUrl = 'http://192.168.1.100/direction';
+
+            // Assemble the full URL with the direction parameter
+            var fullUrl = espUrl + '?dir=' + direction;
+
+            // Send the request
+            fetch(fullUrl)
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Event listeners for joystick movement
+        joystick.on('move', function (evt, data) {
+            // Calculate the direction based on the angle
+            var direction;
+            var angle = data.angle.degree;
+            
+            if (angle > 45 && angle <= 135) {
+                direction = 'forward';
+            } else if (angle > 135 && angle <= 225) {
+                direction = 'left';
+            } else if (angle > 225 && angle <= 315) {
+                direction = 'backward';
+            } else {
+                direction = 'right';
+            }
+
+            // Send the direction to the ESP32
+            sendDirection(direction);
+        });
+
+        joystick.on('end', function () {
+            // Joystick has been released, send stop command
+            sendDirection('stop');
+        });
+        
+    </script>
+    <hr>
+</body>
+
+</html>

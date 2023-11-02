@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 Direction Controller</title>
+</head>
+<body>
+<h1>ESP32 Direction Controller</h1>
+<p>Use WASD keys to control the direction:</p>
+<p>W - Forward, A - Left, S - Backward, D - Right</p>
+
+<script>
+// Function to send the request to the ESP32
+function sendDirection(direction) {
+  // Replace with the IP address of your ESP32
+  var espUrl = 'http://192.168.1.100/direction';
+
+  // Assemble the full URL with the direction parameter
+  var fullUrl = espUrl + '?dir=' + direction;
+
+  // Send the request
+  fetch(fullUrl)
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+
+// Event listener for keydown to start movement
+document.addEventListener('keydown', function(event) {
+  if(event.key === 'w' || event.key === 'W') {
+    sendDirection('forward');
+  } else if(event.key === 'a' || event.key === 'A') {
+    sendDirection('left');
+  } else if(event.key === 's' || event.key === 'S') {
+    sendDirection('backward');
+  } else if(event.key === 'd' || event.key === 'D') {
+    sendDirection('right');
+  }
+});
+
+// Event listener for keyup to stop movement
+document.addEventListener('keyup', function(event) {
+  if(['w', 'W', 'a', 'A', 's', 'S', 'd', 'D'].includes(event.key)) {
+    sendDirection('stop');
+  }
+});
+</script>
+</body>
+</html>

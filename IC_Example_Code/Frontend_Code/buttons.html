@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ESP32 D-pad Controller</title>
+<style>
+  #dpad {
+    display: flex;
+    flex-wrap: wrap;
+    width: 150px;
+    margin: auto;
+  }
+  .button {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid #000;
+    margin: 2px;
+  }
+  #dpad .middle {
+    width: 50px;
+    visibility: hidden;
+  }
+</style>
+</head>
+<body>
+<h1>ESP32 D-pad Controller</h1>
+
+<div id="dpad">
+  <div class="button" onclick="sendDirection('forward')">Up</div>
+  <div class="button" onclick="sendDirection('left')">Left</div>
+  <div class="middle"></div>
+  <div class="button" onclick="sendDirection('right')">Right</div>
+  <div class="button" onclick="sendDirection('backward')">Down</div>
+</div>
+<hr>
+<script src="shapespark-controller.js"></script>
+<script>
+// Function to send the request to the ESP32
+function sendDirection(direction) {
+  // Replace with the IP address of your ESP32
+  var espUrl = 'http://192.168.1.100/direction';
+
+  // Assemble the full URL with the direction parameter
+  var fullUrl = espUrl + '?dir=' + direction;
+
+  // Send the request
+  fetch(fullUrl)
+    .then(response => response.text())
+    .then(data => console.log(data))
+    .catch(error => console.error('Error:', error));
+}
+</script>
+</body>
+</html>
