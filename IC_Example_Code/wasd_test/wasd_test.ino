@@ -5,10 +5,10 @@ const char* ssid = "SBRT";
 const char* password = "Robotic$3";
 
 // Define motor pins
-const int motorA1 = 15; 
-const int motorA2 = 2;
-const int motorB1 = 32;
-const int motorB2 = 33;
+const int motorA1 = 12; 
+const int motorA2 = 33;
+const int motorB1 = 13;
+const int motorB2 = 32;
 
 AsyncWebServer server(80);
 
@@ -28,7 +28,7 @@ String html2 = R"RAW(
 function sendDirection(direction) {
   // Replace with the IP address of your ESP32
   var ip = location.host;
-  var espUrl = 'http://192.168.1.219/control';
+  var espUrl = 'http://192.168.1.25/control';
 
   // Assemble the full URL with the direction parameter
   var fullUrl = espUrl + '?dir=' + direction;
