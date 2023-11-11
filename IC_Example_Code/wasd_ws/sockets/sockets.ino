@@ -26,16 +26,9 @@ const char indexHtml[]  = R"RAW(
     <h1>ESP32 Direction Controller</h1>
     <p>Use WASD keys to control the direction:</p>
     <p>W - Forward, A - Left, S - Backward, D - Right</p>
-    <div>
-      <figure style="height: 49vh">
-        <div id="stream-container" class="image-container">
-          <img id="stream" src="" />
-        </div>
-      </figure>
-    </div>
+
 
     <script>
-      const view = document.getElementById("stream");
       var gateway = `ws://${window.location.hostname}:81`; // WebSocket URL
       var websocket;
 
@@ -50,12 +43,6 @@ const char indexHtml[]  = R"RAW(
         };
         websocket.onerror = function (evt) {
           console.log("WebSocket error: " + evt.data);
-        };
-        websocket.onmessage = function (evt) {
-          if (evt.data instanceof Blob) {
-            var urlObject = URL.createObjectURL(evt.data);
-            view.src = urlObject;
-          }
         };
       }
 
